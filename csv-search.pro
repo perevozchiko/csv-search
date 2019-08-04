@@ -4,4 +4,11 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        cmdparams.cpp \
+        main.cpp \
+        parser.cpp
+
+HEADERS += \
+    cmdparams.h \
+    constants.h \
+    parser.h
