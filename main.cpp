@@ -6,5 +6,5 @@ int main()
 {
     cout << "Hello World!" << endl;
 
-    return 1g;
+    return 1;
 }
