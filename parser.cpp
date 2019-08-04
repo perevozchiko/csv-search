@@ -10,16 +10,9 @@ Parser::Parser(std::ifstream &_inputFile) :
 
 bool Parser::find(const std::string inputColumnName, const std::string exp)
 {
-    /*
-* Получить хедер из входного файла
-
-* Сравнить есть ли колонка из хедера (в виде энама название и тип) с колонкой входной если нет то вывести что нет такой колонки
-* проверить входное выражение соответствует ли тип колонки если нет то вывести что не соотвествует тип колонки
-* получить строку если в ней совпадает выражение из соответствующей колонки то добавляем в файл выходной
-*
-*/
     getHeader();
-    if (noError)
+
+    if (!noError)
     {
         return 0;
     }
@@ -42,6 +35,7 @@ bool Parser::find(const std::string inputColumnName, const std::string exp)
         expType = Type::String;
     }
 
+    IndexesColumn.clear();
     for (unsigned int i = 0; i < header.size(); i++)
     {
         Column column = header[i];
@@ -50,7 +44,32 @@ bool Parser::find(const std::string inputColumnName, const std::string exp)
             IndexesColumn.push_back(i);
         }
     }
-
+    if (IndexesColumn.empty())
+    {
+        return false;
+    }
+    coincidence.clear();
+    while(inputFile)
+    {
+        std::string rowLine;
+        std::getline(inputFile, rowLine);
+        std::vector<std::string>csvRows = getCsvRow(rowLine);
+        for(unsigned int i : IndexesColumn)
+        {
+            if(csvRows[i] == exp)
+            {
+                coincidence.push_back(rowLine);
+            }
+        }
+    }
+    if (coincidence.empty())
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 void Parser::getHeader()
@@ -67,7 +86,7 @@ void Parser::getHeader()
         if (space == 1)
         {
             size_t spacePos = str.find(' ');
-            column.columnName = str.substr(0, spacePos-1);
+            column.columnName = str.substr(0, spacePos);
             std::string typeField = str.substr(spacePos+1);
             if (convertStringToType(typeField) != Type::Undefined)
             {
@@ -92,8 +111,7 @@ void Parser::getHeader()
 
 std::vector<std::string> Parser::getCsvRow(std::string lineCsv)
 {
-
-    std::vector<std::string> fields;
+    std::vector<std::string> fields {""};
     Status status = Status::unQuotedField;
     size_t i = 0;
     for (char ch : lineCsv)
@@ -283,11 +301,11 @@ bool Parser::isFloat(std::string str)
 bool Parser::checkData(int day, int month, int year)
 {
     bool isLeapYear = false;
-    if (day < 1 && day > 31)
+    if (day < 1 || day > 31)
     {
         return  false;
     }
-    if (month < 1 && month > 12)
+    if (month < 1 || month > 12)
     {
         return false;
     }
@@ -316,5 +334,7 @@ bool Parser::checkData(int day, int month, int year)
     return true;
 }
 
-
-
+std::vector<std::string> Parser::getCoincidence() const
+{
+    return coincidence;
+}

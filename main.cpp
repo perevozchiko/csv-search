@@ -42,7 +42,14 @@ int main(int argc, char* argv[])
                 return 0;
             }
 
-            //TODO Запись в  выходной файл
+            if (!parser.getCoincidence().empty())
+            {
+                std::vector<std::string> coincidence = parser.getCoincidence();
+                for (size_t i = 0; i < coincidence.size(); i++)
+                {
+                    outFile << coincidence[i] + endLine;
+                }
+            }
 
             outFile.close();
         }
