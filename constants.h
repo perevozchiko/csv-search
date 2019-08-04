@@ -8,7 +8,8 @@
 const std::string defaultEncoding = "UTF-8";
 const std::string defaultOutPutFile = "out_file.csv";
 
-
+const int maxIntLength = std::numeric_limits<int>::max();
+const float maxFloatLength = 1000.f;
 
 const std::string whiteSpace = " ";
 const std::string delimeter = ";";
@@ -31,6 +32,7 @@ const std::vector<std::string> symbols = {"а", "б", "в", "г", "д", "е", "�
 //                                          "Т", "У", "Ф", "Х", "Ц", "Ч", "Ш", "Щ", "Ъ", "Ы", "Ь", "Э", "Ю", "Я", delimeter};
 enum Type
 {
+    Undefined = 0,
     String = 1,
     Date,
     Integer,
