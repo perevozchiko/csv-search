@@ -56,6 +56,7 @@ bool Parser::find(const std::string inputColumnName, const std::string exp)
         std::vector<std::string>csvRows = getCsvRow(rowLine);
         for(unsigned int i : IndexesColumn)
         {
+            //std::cout << csvRows[i] << std::endl;
             if(csvRows[i] == exp)
             {
                 coincidence.push_back(rowLine);
@@ -95,7 +96,7 @@ void Parser::getHeader()
             else
             {
                 noError = true;
-                std::cerr << "\nОшибка: неправильный тип у колонки входного файла\n\n";
+                std::cerr << "\nОшибка: неправильный тип у колонки: " << column.columnName << " входного файла\n\n";
                 break;
             }
         }

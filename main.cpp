@@ -44,7 +44,6 @@ int main(int argc, char* argv[])
 
             if (!parser.getCoincidence().empty())
             {
-                outFile << BOM;
                 std::vector<std::string> coincidence = parser.getCoincidence();
                 for (size_t i = 0; i < coincidence.size(); i++)
                 {
