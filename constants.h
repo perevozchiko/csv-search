@@ -10,10 +10,10 @@ const std::string defaultOutPutFile = "out_file.csv";
 
 const int maxIntLength = std::numeric_limits<int>::max();
 const float maxFloatLength = 1000.f;
-
+const char BOM[3] = {(char)0xef, (char)0xbb, (char)0xbf};
 const std::string whiteSpace = " ";
 const std::string delimeter = ";";
-const std::string endLine = "\r\n";
+const std::string endLine = "\r\n"; // для линукс
 const std::string quotes = "\"";
 const std::string backslash = "\\";
 const std::string pointer = ".";
