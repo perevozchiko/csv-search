@@ -2,11 +2,12 @@
 #include <algorithm>
 #include <iostream>
 
-Parser::Parser(std::ifstream &_inputFile) :
+Parser::Parser(std::istream& _inputFile) :
     inputFile(_inputFile)
 {
 
 }
+
 
 bool Parser::find(const std::string inputColumnName, const std::string exp)
 {
@@ -258,6 +259,11 @@ bool Parser::isDate(std::string str)
 
 bool Parser::isInt(std::string str)
 {
+    if (str.empty())
+    {
+        return false;
+    }
+
     for (char ch : str)
     {
         if (!isdigit(ch))
@@ -276,6 +282,7 @@ bool Parser::isInt(std::string str)
 bool Parser::isFloat(std::string str)
 {
     int comma = 0;
+    bool digitAfterComma = false;
     if (!isdigit(str[0]))
     {
         return false;
@@ -287,12 +294,16 @@ bool Parser::isFloat(std::string str)
         {
             return  false;
         }
+        if (comma == 1)
+        {
+            digitAfterComma = true;
+        }
         if (ch == ',')
         {
             comma++;
         }
     }
-    if (comma != 1)
+    if (comma != 1 || !digitAfterComma)
     {
         return false;
     }
@@ -310,12 +321,19 @@ bool Parser::checkData(int day, int month, int year)
     {
         return false;
     }
-
-    if ((month == 2 or month == 4 or month == 6 or month == 9 or month == 11) && day == 31)
+    if (year < 1 || year > 9999)
     {
         return false;
     }
 
+    if ((month == 4 or month == 6 or month == 9 or month == 11) && day == 31)
+    {
+        return false;
+    }
+    if (month == 2 && day > 29)
+    {
+        return false;
+    }
     if (year > 1582)
     {
         if(year%100 == 0)

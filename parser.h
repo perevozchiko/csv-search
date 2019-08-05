@@ -7,13 +7,13 @@
 class Parser
 {
 public:
+    explicit Parser(std::istream& _inputFile);
     enum class Status
     {
         unQuotedField,
         qoutedField,
         qoutedQuote
     };
-    Parser(std::ifstream& _inputFile);
     bool find(const std::string inputColumnName, const std::string exp);
     std::vector<std::string> getCoincidence() const;
     Type convertStringToType(std::string strType);
@@ -29,7 +29,7 @@ private:
         std::string columnName;
         Type typeName;
     };
-    std::ifstream& inputFile;
+    std::istream& inputFile;
     std::vector <Column> header;
     void getHeader();
     std::vector<unsigned int> IndexesColumn;
