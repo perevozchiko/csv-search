@@ -207,7 +207,7 @@ TEST_P(testCheckData, testParserFunctions)
 struct stringData
 {
     stringData(std::string _strType, Type _result) :
-       strType(_strType),
+        strType(_strType),
         result(_result)
     {}
     std::string strType;
@@ -249,7 +249,7 @@ TEST_P(testConvertStrtingToType, testParserFunctions)
 struct csvRowData
 {
     csvRowData(std::string _lineCsv, std::vector<std::string> _result) :
-       lineCsv(_lineCsv),
+        lineCsv(_lineCsv),
         result(_result)
     {}
     std::string lineCsv;
@@ -262,6 +262,11 @@ class testGetCsvRow : public ::testing::TestWithParam<csvRowData>
 INSTANTIATE_TEST_CASE_P(set, testGetCsvRow, ::testing::Values(
 
                             csvRowData("string;row;data", {"string", "row", "data"})
+                            , csvRowData("string;row;data", {"string", "row", "data"})
+                            , csvRowData("string;row;data", {"string", "row", "data"})
+                            , csvRowData("string;row;data", {"string", "row", "data"})
+                            , csvRowData("string;row;data", {"string", "row", "data"})
+
                             ),);
 
 TEST_P(testGetCsvRow, testParserFunctions)
