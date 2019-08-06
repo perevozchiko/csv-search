@@ -284,7 +284,10 @@ std::string fakeCsvFileData =
         "Simple text;123456;123,456;06.09.2020\n"
         "Simple text Row-2;789123;789,123;06.09.2020\n"
         "Simple text;0;0,0;31.01.9999\n"
-        "Simple text another row;123456;0,123;28.02.2019\n";
+        "Simple text another row;123456;0,123;28.02.2019\n"
+        "\"Simple text with qoute \"\"another\"\" text\";123456;123,456;20.05.01582\n"
+        "\"Simple text with delimeter;another text\";123456;123,456;20.05.01582\n"
+        ;
 
 struct inputUserData
 {
@@ -308,6 +311,8 @@ INSTANTIATE_TEST_CASE_P(set, testFuncFind, ::testing::Values(
                             , inputUserData("NumInt","123456", true)
                             , inputUserData("NumFloat","123,456", true)
                             , inputUserData("Calendar","06.09.2020", true)
+                            , inputUserData("text","Simple text with delimeter;another text", true)
+                            , inputUserData("text","Simple text with qoute \"another\" text", true)
 
                             , inputUserData("text","Simpletext", false)
                             , inputUserData("NumInt","1234567", false)
@@ -324,7 +329,6 @@ INSTANTIATE_TEST_CASE_P(set, testFuncFind, ::testing::Values(
                             , inputUserData("textWrong","Simple text", false)
                             , inputUserData("NumFloatWrong","123,456", false)
                             , inputUserData("CalendarWrong","06.09.2020", false)
-
                             ),);
 
 TEST_P(testFuncFind, testParserFunctions)
