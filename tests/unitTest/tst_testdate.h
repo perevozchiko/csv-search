@@ -106,7 +106,7 @@ TEST_P(testFuncIsInt, testParserFunctions)
 {
     const auto param = GetParam();
     //заглушка файл
-    std::istringstream f("fake");
+    std::istringstream f("fake input file");
     Parser parse(f);
     bool actual = parse.isInt(param.inputString);
     bool expected = param.result;
@@ -139,13 +139,11 @@ INSTANTIATE_TEST_CASE_P(set, testFuncIsFloat, ::testing::Values(
                             , inputExpression("0,0", true)
                             ),);
 
-
-
 TEST_P(testFuncIsFloat, testParserFunctions)
 {
     const auto param = GetParam();
     //заглушка файл
-    std::istringstream f("fake");
+    std::istringstream f("fake input file");
     Parser parse(f);
     bool actual = parse.isFloat(param.inputString);
     bool expected = param.result;
@@ -197,7 +195,7 @@ TEST_P(testCheckData, testParserFunctions)
 {
     const auto param = GetParam();
     //заглушка файл
-    std::istringstream f("fake");
+    std::istringstream f("fake input file");
     Parser parse(f);
     bool actual = parse.checkData(param.day, param.month, param.year);
     bool expected = param.result;
@@ -238,7 +236,7 @@ TEST_P(testConvertStrtingToType, testParserFunctions)
 {
     const auto param = GetParam();
     //заглушка файл
-    std::istringstream f("fake");
+    std::istringstream f("fake input file");
     Parser parse(f);
     Type actual = parse.convertStringToType(param.strType);
     Type expected = param.result;
@@ -262,25 +260,81 @@ class testGetCsvRow : public ::testing::TestWithParam<csvRowData>
 INSTANTIATE_TEST_CASE_P(set, testGetCsvRow, ::testing::Values(
 
                             csvRowData("string;row;data", {"string", "row", "data"})
-                            , csvRowData("string;row;data", {"string", "row", "data"})
-                            , csvRowData("string;row;data", {"string", "row", "data"})
-                            , csvRowData("string;row;data", {"string", "row", "data"})
-                            , csvRowData("string;row;data", {"string", "row", "data"})
-
+                            , csvRowData("str;\"str;str\"", {"str", "str;str"})
+                            , csvRowData("", {""})
+                            , csvRowData("str;str;str str; str str", {"str", "str", "str str", " str str"})
+                            , csvRowData("\"\"\"", {"\""})
+                            , csvRowData("\"str\"\"", {"str\""})
+                            , csvRowData("str;\"\"\"\";str", {"str", "\"", "str"})
                             ),);
 
 TEST_P(testGetCsvRow, testParserFunctions)
 {
     const auto param = GetParam();
     //заглушка файл
-    std::istringstream f("fake");
+    std::istringstream f("fake input file");
     Parser parse(f);
     std::vector<std::string> actual = parse.getCsvRow(param.lineCsv);
     std::vector<std::string> expected = param.result;
     EXPECT_EQ(expected, actual);
 }
 
+std::string fakeCsvFileData =
+        "text String;NumInt Integer;NumFloat Float;Calendar Date\n"
+        "Simple text;123456;123,456;06.09.2020\n"
+        "Simple text Row-2;789123;789,123;06.09.2020\n"
+        "Simple text;0;0,0;31.01.9999\n"
+        "Simple text another row;123456;0,123;28.02.2019\n";
 
+struct inputUserData
+{
+    inputUserData(std::string _col, std::string _exp, bool _result) :
+        col(_col),
+        exp(_exp),
+        result(_result)
+    {
+    }
+    std::string col;
+    std::string exp;
+    bool result;
+};
 
+class testFuncFind : public ::testing::TestWithParam<inputUserData>
+{};
+
+INSTANTIATE_TEST_CASE_P(set, testFuncFind, ::testing::Values(
+
+                            inputUserData("text","Simple text", true)
+                            , inputUserData("NumInt","123456", true)
+                            , inputUserData("NumFloat","123,456", true)
+                            , inputUserData("Calendar","06.09.2020", true)
+
+                            , inputUserData("text","Simpletext", false)
+                            , inputUserData("NumInt","1234567", false)
+                            , inputUserData("NumFloat","123,4567", false)
+                            , inputUserData("Calendar","01.01.0001", false)
+
+                            , inputUserData("NumInt","123,456", false)
+                            , inputUserData("NumFloat","123456", false)
+                            , inputUserData("text","123456", false)
+                            , inputUserData("Calendar","Simple text", false)
+                            , inputUserData("NumInt","Simple text", false)
+
+                            , inputUserData("NumIntWrong","123456", false)
+                            , inputUserData("textWrong","Simple text", false)
+                            , inputUserData("NumFloatWrong","123,456", false)
+                            , inputUserData("CalendarWrong","06.09.2020", false)
+
+                            ),);
+
+TEST_P(testFuncFind, testParserFunctions)
+{
+    const auto param = GetParam();
+    std::istringstream file(fakeCsvFileData);
+    Parser parse(file);
+    bool actual = parse.find(param.col, param.exp);
+    bool expected = param.result;
+    EXPECT_EQ(expected, actual);
+}
 
 #endif // TST_TESTDATE_H

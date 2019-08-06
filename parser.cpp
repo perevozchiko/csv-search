@@ -11,7 +11,7 @@ Parser::Parser(std::istream& _inputFile) :
 
 bool Parser::find(const std::string inputColumnName, const std::string exp)
 {
-    getHeader();
+    setHeaderFromCsv();
 
     if (!noError)
     {
@@ -74,7 +74,7 @@ bool Parser::find(const std::string inputColumnName, const std::string exp)
     }
 }
 
-void Parser::getHeader()
+void Parser::setHeaderFromCsv()
 {
     std::string lineCsv;
     std::getline(inputFile, lineCsv);
@@ -182,6 +182,11 @@ std::vector<std::string> Parser::getCsvRow(std::string lineCsv)
         }
     }
     return fields;
+}
+
+std::vector<Column> Parser::getHeader()
+{
+    return header;
 }
 
 Type Parser::convertStringToType(std::string strType)

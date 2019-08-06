@@ -4,6 +4,12 @@
 #include "constants.h"
 #include <vector>
 
+struct Column
+{
+    std::string columnName;
+    Type typeName{Type::Undefined};
+};
+
 class Parser
 {
 public:
@@ -14,6 +20,7 @@ public:
         qoutedField,
         qoutedQuote
     };
+
     bool find(const std::string inputColumnName, const std::string exp);
     std::vector<std::string> getCoincidence() const;
     Type convertStringToType(std::string strType);
@@ -22,16 +29,12 @@ public:
     bool isFloat(std::string str);
     bool checkData(int day, int month, int year);
     std::vector<std::string> getCsvRow(std::string lineCsv);
+    std::vector<Column> getHeader();
 
 private:
-    struct Column
-    {
-        std::string columnName;
-        Type typeName;
-    };
     std::istream& inputFile;
     std::vector <Column> header;
-    void getHeader();
+    void setHeaderFromCsv();
     std::vector<unsigned int> IndexesColumn;
     bool noError{true};
     std::vector<std::string> coincidence;
