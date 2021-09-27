@@ -1,5 +1,5 @@
 # csv-search
-Search data in csv file by columns
+Console application search data in csv file by columns
 
 Using:
 
